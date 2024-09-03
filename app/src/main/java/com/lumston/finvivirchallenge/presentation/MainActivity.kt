@@ -15,6 +15,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.lumston.finvivirchallenge.R
 import com.lumston.finvivirchallenge.databinding.ActivityMainBinding
+import com.lumston.finvivirchallenge.presentation.components.WeatherInfoWindowAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -77,7 +78,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun moveMapTo(latLng: LatLng) {
+        val marker = googleMap?.addMarker(MarkerOptions().position(latLng))
         googleMap?.moveCamera(CameraUpdateFactory.newLatLng(latLng))
         googleMap?.animateCamera(CameraUpdateFactory.zoomTo(10f))
+        googleMap?.setInfoWindowAdapter(WeatherInfoWindowAdapter(this))
+        marker?.showInfoWindow()
     }
 }
