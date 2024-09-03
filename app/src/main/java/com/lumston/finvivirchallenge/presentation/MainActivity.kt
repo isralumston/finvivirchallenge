@@ -1,8 +1,10 @@
 package com.lumston.finvivirchallenge.presentation
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.api.Status
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -12,44 +14,70 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.lumston.finvivirchallenge.R
+import com.lumston.finvivirchallenge.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+    private lateinit var binding: ActivityMainBinding
+    private val viewModel: MainViewModel by viewModels()
+
+    // Google map
+    private var googleMap: GoogleMap? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setupMapCall()
+        setupPlacesApi()
+    }
 
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
+    private fun setupMapCall() {
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map)
+                as? SupportMapFragment
         mapFragment?.getMapAsync(this)
+    }
 
+    private fun setupPlacesApi() {
+        // Getting the places API
+        val autocompletePlacesFragment = supportFragmentManager
+            .findFragmentById(R.id.autocomplete_fragment)
+                as? AutocompleteSupportFragment
 
-        // Initialize the AutocompleteSupportFragment.
-        val autocompleteFragment =
-            supportFragmentManager.findFragmentById(R.id.autocomplete_fragment)
-                    as AutocompleteSupportFragment
-
-        // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(
-            listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
+        // Place fields to handle
+        autocompletePlacesFragment?.setPlaceFields(
+            listOf(
+                Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG
+            )
         )
 
-        // Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+        // Place selection listener
+        autocompletePlacesFragment?.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onPlaceSelected(place: Place) {
-                place.latLng?.latitude
+                place.latLng?.let {
+                    moveMapTo(it)
+                }
             }
 
-            override fun onError(status: Status) {
-
-            }
+            override fun onError(status: Status) {}
         })
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
+        this.googleMap = googleMap
+
         val sydney = LatLng(-33.852, 151.211)
         googleMap.addMarker(
             MarkerOptions()
                 .position(sydney)
                 .title("Marker in Sydney")
         )
+    }
+
+    private fun moveMapTo(latLng: LatLng) {
+        googleMap?.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+        googleMap?.animateCamera(CameraUpdateFactory.zoomTo(15f))
     }
 }

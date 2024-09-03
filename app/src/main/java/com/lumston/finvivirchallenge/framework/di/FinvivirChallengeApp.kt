@@ -13,7 +13,7 @@ class FinvivirChallengeApp: Application() {
             Places.initialize(
                 this,
                 BuildConfig.MAPS_KEY
-            );
+            )
         }
     }
 }
