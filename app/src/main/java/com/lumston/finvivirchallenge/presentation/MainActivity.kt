@@ -78,6 +78,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun moveMapTo(latLng: LatLng) {
         googleMap?.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-        googleMap?.animateCamera(CameraUpdateFactory.zoomTo(15f))
+        googleMap?.animateCamera(CameraUpdateFactory.zoomTo(10f))
     }
 }
