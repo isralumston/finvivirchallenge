@@ -18,9 +18,14 @@ class OpenWeatherApiImpl @Inject constructor(
             val response = request.body()!!
             WeatherInfo(
                 name = response.name,
+                lat = lat,
+                lon = lon,
                 weather = response.main,
                 conditions = response.weather
             )
-        } else WeatherInfo()
+        } else WeatherInfo(
+            lat = lat,
+            lon = lon
+        )
     }
 }

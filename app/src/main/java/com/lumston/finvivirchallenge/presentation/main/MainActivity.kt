@@ -33,9 +33,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, MainViewContract {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel.viewContract = this
         setupMapCall()
         setupPlacesApi()
+        attachObserverAndContract()
+    }
+
+    private fun attachObserverAndContract() {
+        viewModel.viewContract = this
+        viewModel.weatherInfo.observe(this) {
+            showWeatherInfoFor(it)
+        }
     }
 
     private fun setupMapCall() {
@@ -81,13 +88,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, MainViewContract {
         binding.progressIndicator.visible()
     }
 
-    override fun onWeatherInfoReady(info: WeatherInfo, lat: Double, lon: Double) {
+    override fun onWeatherInfoReady() {
         binding.progressIndicator.gone()
-        showWeatherInfoFor(info, LatLng(lat, lon))
     }
 
-    private fun showWeatherInfoFor(info: WeatherInfo, latLng: LatLng) {
+    private fun showWeatherInfoFor(info: WeatherInfo) {
+        // Clear previous markers
+        googleMap?.clear()
+
         // Setup marker tag with weather info
+        val latLng = LatLng(info.lat, info.lon)
         val marker = googleMap?.addMarker(MarkerOptions().position(latLng))
         marker?.tag = info
 
