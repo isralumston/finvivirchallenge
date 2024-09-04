@@ -50,9 +50,6 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 
     /**
     * Dagger hilt
@@ -93,7 +90,16 @@ dependencies {
     implementation(libs.places)
 
     /**
-    * Glide
+    * Testing ------------------------------------------------------------------
     * */
-    implementation(libs.glide)
+    testImplementation(libs.junit)
+    // Coroutines testing
+    testImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.test)
+    // Lifecycle components tests
+    testImplementation(libs.androidx.core.testing)
+    // MockK
+    testImplementation(libs.mockk)
+    // Instrumented
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
