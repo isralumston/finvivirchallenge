@@ -1,4 +1,4 @@
-package com.lumston.finvivirchallenge.presentation
+package com.lumston.finvivirchallenge.presentation.main
 
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -14,12 +14,15 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.lumston.finvivirchallenge.R
+import com.lumston.finvivirchallenge.data.model.WeatherInfo
 import com.lumston.finvivirchallenge.databinding.ActivityMainBinding
-import com.lumston.finvivirchallenge.presentation.components.WeatherInfoWindowAdapter
+import com.lumston.finvivirchallenge.framework.extensions.gone
+import com.lumston.finvivirchallenge.framework.extensions.visible
+import com.lumston.finvivirchallenge.presentation.maps.WeatherInfoWindowAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, MainViewContract {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
 
@@ -30,6 +33,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        viewModel.viewContract = this
         setupMapCall()
         setupPlacesApi()
     }
@@ -49,16 +53,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Place fields to handle
         autocompletePlacesFragment?.setPlaceFields(
-            listOf(
-                Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG
-            )
+            listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
         )
 
         // Place selection listener
         autocompletePlacesFragment?.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onPlaceSelected(place: Place) {
                 place.latLng?.let {
-                    moveMapTo(it)
+                    viewModel.getWeatherInfo(
+                        it.latitude, it.longitude
+                    )
                 }
             }
 
@@ -68,20 +72,30 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
-
-        val sydney = LatLng(-33.852, 151.211)
-        googleMap.addMarker(
-            MarkerOptions()
-                .position(sydney)
-                .title("Marker in Sydney")
+        this.googleMap?.setInfoWindowAdapter(
+            WeatherInfoWindowAdapter(this)
         )
     }
 
-    private fun moveMapTo(latLng: LatLng) {
+    override fun onWeatherInfoRequested() {
+        binding.progressIndicator.visible()
+    }
+
+    override fun onWeatherInfoReady(info: WeatherInfo, lat: Double, lon: Double) {
+        binding.progressIndicator.gone()
+        showWeatherInfoFor(info, LatLng(lat, lon))
+    }
+
+    private fun showWeatherInfoFor(info: WeatherInfo, latLng: LatLng) {
+        // Setup marker tag with weather info
         val marker = googleMap?.addMarker(MarkerOptions().position(latLng))
+        marker?.tag = info
+
+        // Move camera to specified lat lon
         googleMap?.moveCamera(CameraUpdateFactory.newLatLng(latLng))
         googleMap?.animateCamera(CameraUpdateFactory.zoomTo(10f))
-        googleMap?.setInfoWindowAdapter(WeatherInfoWindowAdapter(this))
+
+        // Show weather info
         marker?.showInfoWindow()
     }
 }

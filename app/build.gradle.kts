@@ -91,4 +91,9 @@ dependencies {
      *  */
     implementation(libs.play.services.maps)
     implementation(libs.places)
+
+    /**
+    * Glide
+    * */
+    implementation(libs.glide)
 }

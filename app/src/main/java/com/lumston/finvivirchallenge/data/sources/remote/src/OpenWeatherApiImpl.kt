@@ -17,6 +17,7 @@ class OpenWeatherApiImpl @Inject constructor(
         return if (request.isSuccessful) {
             val response = request.body()!!
             WeatherInfo(
+                name = response.name,
                 weather = response.main,
                 conditions = response.weather
             )
