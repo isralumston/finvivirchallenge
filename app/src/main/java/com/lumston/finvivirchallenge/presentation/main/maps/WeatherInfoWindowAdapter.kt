@@ -7,7 +7,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import com.lumston.finvivirchallenge.data.model.WeatherInfo
 import com.lumston.finvivirchallenge.databinding.WeatherInfoLayoutBinding
-import com.lumston.finvivirchallenge.framework.extensions.iconToLocalResource
 
 class WeatherInfoWindowAdapter(
     private val context: Context
@@ -20,19 +19,16 @@ class WeatherInfoWindowAdapter(
             val info = marker.tag as WeatherInfo
 
             // Title
-            binding.title.text = info.name
+            binding.title.text = info.place
 
             // Temperature
-            val temperature = "${info.weather?.temp ?: "?"} °C"
+            val temperature = "${info.temp} °C"
             binding.temperatureText.text = temperature
 
-            // Weather condition
-            if (info.conditions.isNotEmpty()) {
-                val condition = info.conditions[0]
-                val description = "${condition.main} - ${condition.description}"
-                binding.description.text = description
-                binding.icon.setImageResource(condition.iconToLocalResource())
-            }
+            // Weather details
+            val description = "${info.weather} - ${info.weatherDescription}"
+            binding.description.text = description
+            binding.icon.setImageResource(info.icon)
         }
 
         return binding.root

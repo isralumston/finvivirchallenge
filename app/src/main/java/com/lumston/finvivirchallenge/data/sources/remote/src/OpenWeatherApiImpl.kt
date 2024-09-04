@@ -1,8 +1,10 @@
 package com.lumston.finvivirchallenge.data.sources.remote.src
 
 import com.lumston.finvivirchallenge.BuildConfig
+import com.lumston.finvivirchallenge.R
 import com.lumston.finvivirchallenge.data.model.WeatherInfo
 import com.lumston.finvivirchallenge.data.sources.remote.network.apis.OpenWeatherApi
+import com.lumston.finvivirchallenge.framework.extensions.iconToLocalResource
 import javax.inject.Inject
 
 class OpenWeatherApiImpl @Inject constructor(
@@ -14,14 +16,26 @@ class OpenWeatherApiImpl @Inject constructor(
             appId = BuildConfig.WEATHER_KEY
         )
 
-        return if (request.isSuccessful) {
+        // Create WeatherInfo instance from response
+        return if (request.isSuccessful && request.body() != null) {
             val response = request.body()!!
             WeatherInfo(
-                name = response.name,
+                place = response.name,
                 lat = lat,
                 lon = lon,
-                weather = response.main,
-                conditions = response.weather
+                temp = response.main.temp,
+                weather = response.weather.let {
+                    if (it.isNotEmpty()) it[0].main
+                    else ""
+                },
+                weatherDescription = response.weather.let {
+                    if (it.isNotEmpty()) it[0].description
+                    else ""
+                },
+                icon = response.weather.let {
+                    if (it.isNotEmpty()) it[0].iconToLocalResource()
+                    else R.drawable.ic_weather_clear
+                }
             )
         } else WeatherInfo(
             lat = lat,

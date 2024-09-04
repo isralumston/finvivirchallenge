@@ -10,8 +10,6 @@ class GetWeatherInfoUC @Inject constructor(
     suspend operator fun invoke(
         lat: Double, lon: Double
     ): WeatherInfo {
-        return weatherRepo.getWeatherInfo(
-            lat, lon
-        )
+        return weatherRepo.getWeatherInfo(lat, lon)
     }
 }
