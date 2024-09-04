@@ -2,7 +2,7 @@ package com.lumston.finvivirchallenge.framework.extensions
 
 import android.view.View
 import com.lumston.finvivirchallenge.R
-import com.lumston.finvivirchallenge.data.model.Condition
+import com.lumston.finvivirchallenge.data.model.WeatherInfo
 
 fun View.visible() {
     this.visibility = View.VISIBLE
@@ -12,7 +12,7 @@ fun View.gone() {
     this.visibility = View.GONE
 }
 
-fun Condition.iconToLocalResource(): Int {
+fun WeatherInfo.iconToLocalResource(): Int {
     return when {
         // Clear weather
         icon.contains("01") -> R.drawable.ic_weather_clear

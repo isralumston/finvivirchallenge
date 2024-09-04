@@ -1,10 +1,8 @@
 package com.lumston.finvivirchallenge.data.sources.remote.src
 
 import com.lumston.finvivirchallenge.BuildConfig
-import com.lumston.finvivirchallenge.R
 import com.lumston.finvivirchallenge.data.model.WeatherInfo
 import com.lumston.finvivirchallenge.data.sources.remote.network.apis.OpenWeatherApi
-import com.lumston.finvivirchallenge.framework.extensions.iconToLocalResource
 import javax.inject.Inject
 
 class OpenWeatherApiImpl @Inject constructor(
@@ -33,8 +31,8 @@ class OpenWeatherApiImpl @Inject constructor(
                     else ""
                 },
                 icon = response.weather.let {
-                    if (it.isNotEmpty()) it[0].iconToLocalResource()
-                    else R.drawable.ic_weather_clear
+                    if (it.isNotEmpty()) it[0].icon
+                    else ""
                 }
             )
         } else WeatherInfo(

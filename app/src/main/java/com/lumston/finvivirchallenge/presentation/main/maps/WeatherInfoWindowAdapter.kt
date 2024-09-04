@@ -7,6 +7,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import com.lumston.finvivirchallenge.data.model.WeatherInfo
 import com.lumston.finvivirchallenge.databinding.WeatherInfoLayoutBinding
+import com.lumston.finvivirchallenge.framework.extensions.iconToLocalResource
 
 class WeatherInfoWindowAdapter(
     private val context: Context
@@ -28,7 +29,7 @@ class WeatherInfoWindowAdapter(
             // Weather details
             val description = "${info.weather} - ${info.weatherDescription}"
             binding.description.text = description
-            binding.icon.setImageResource(info.icon)
+            binding.icon.setImageResource(info.iconToLocalResource())
         }
 
         return binding.root
