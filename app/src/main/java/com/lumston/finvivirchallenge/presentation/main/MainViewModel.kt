@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lumston.finvivirchallenge.data.model.WeatherInfo
+import com.lumston.finvivirchallenge.domain.usecases.GetLastPlaceSearched
 import com.lumston.finvivirchallenge.domain.usecases.GetWeatherInfoUC
 import com.lumston.finvivirchallenge.framework.coroutines.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,12 +16,24 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val dispatchers: DispatcherProvider,
-    private val getWeatherInfoUC: GetWeatherInfoUC
+    private val getWeatherInfoUC: GetWeatherInfoUC,
+    private val getLastPlaceSearched: GetLastPlaceSearched
 ): ViewModel() {
     var viewContract: MainViewContract? = null
 
     val weatherInfo: LiveData<WeatherInfo> get() = _weatherInfo
     private val _weatherInfo = MutableLiveData<WeatherInfo>()
+
+    init { loadLastPlaceSearched() }
+
+    private fun loadLastPlaceSearched() {
+        viewModelScope.launch(dispatchers.io()) {
+            val previousPlace = getLastPlaceSearched()
+            previousPlace?.let {
+                _weatherInfo.postValue(it)
+            }
+        }
+    }
 
     fun getWeatherInfo(
         lat: Double, lon: Double
