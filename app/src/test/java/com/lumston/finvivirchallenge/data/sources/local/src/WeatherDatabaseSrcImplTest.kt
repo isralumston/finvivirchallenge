@@ -18,9 +18,9 @@ class WeatherDatabaseSrcImplTest {
     private lateinit var weatherDatabaseSrcImpl: WeatherDatabaseSrcImpl
 
     // Mocks
-    private val dao: WeatherInfoDao = mockk(relaxed = true)
-    private val weatherInfo: WeatherInfo = mockk(relaxed = true)
-    private val weatherInfoEntity: WeatherInfoEntity = mockk(relaxed = true)
+    private val dao: WeatherInfoDao = mockk()
+    private val weatherInfo: WeatherInfo = mockk()
+    private val weatherInfoEntity: WeatherInfoEntity = mockk()
 
     @Before
     fun setup() {
