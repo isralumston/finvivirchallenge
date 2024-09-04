@@ -1,4 +1,4 @@
-package com.lumston.finvivirchallenge.framework.di.modules
+package com.lumston.finvivirchallenge.framework.di.modules.datasources
 
 import com.lumston.finvivirchallenge.data.sources.remote.network.apis.OpenWeatherApi
 import com.lumston.finvivirchallenge.data.sources.remote.src.OpenWeatherApiImpl
@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RemoteDataSrcModule {
+object RemoteSrcModule {
     @Singleton
     @Provides
     fun providesWeatherRemoteDataSrc(
