@@ -1,4 +1,4 @@
-package com.lumston.finvivirchallenge.presentation.maps
+package com.lumston.finvivirchallenge.presentation.main.maps
 
 import android.content.Context
 import android.view.LayoutInflater

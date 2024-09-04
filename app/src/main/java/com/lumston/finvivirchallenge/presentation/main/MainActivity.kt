@@ -18,7 +18,7 @@ import com.lumston.finvivirchallenge.data.model.WeatherInfo
 import com.lumston.finvivirchallenge.databinding.ActivityMainBinding
 import com.lumston.finvivirchallenge.framework.extensions.gone
 import com.lumston.finvivirchallenge.framework.extensions.visible
-import com.lumston.finvivirchallenge.presentation.maps.WeatherInfoWindowAdapter
+import com.lumston.finvivirchallenge.presentation.main.maps.WeatherInfoWindowAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
