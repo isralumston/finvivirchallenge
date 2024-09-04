@@ -1,7 +1,7 @@
 package com.lumston.finvivirchallenge.framework.di.modules
 
 import com.lumston.finvivirchallenge.domain.repositories.WeatherRepo
-import com.lumston.finvivirchallenge.domain.usecases.GetLastPlaceSearched
+import com.lumston.finvivirchallenge.domain.usecases.GetLastPlaceSearchedUC
 import com.lumston.finvivirchallenge.domain.usecases.GetWeatherInfoUC
 import dagger.Module
 import dagger.Provides
@@ -23,8 +23,8 @@ object UseCaseModule {
     @Provides
     fun providesGetLastWeatherSearchedUC(
         weatherRepo: WeatherRepo
-    ): GetLastPlaceSearched {
-        return GetLastPlaceSearched(
+    ): GetLastPlaceSearchedUC {
+        return GetLastPlaceSearchedUC(
             weatherRepo = weatherRepo
         )
     }

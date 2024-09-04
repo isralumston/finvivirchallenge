@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, MainViewContract {
         viewModel.weatherInfo.observe(this) {
             showWeatherInfoFor(it)
         }
+        viewModel.loadLastPlaceSearched()
     }
 
     private fun setupMapCall() {
